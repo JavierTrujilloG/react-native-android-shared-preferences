@@ -9,16 +9,15 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.Callback;
 
 public class SharedPreferencesModule extends ReactContextBaseJavaModule {
-  Activity mActivity = null;
   SharedPreferences preferences;
 
-  public SharedPreferencesModule(ReactApplicationContext reactApplicationContext, Activity activity) {
+  public SharedPreferencesModule(ReactApplicationContext reactApplicationContext) {
     super(reactApplicationContext);
-    preferences = reactApplicationContext.getApplicationContext().getSharedPreferences("titanium", Context.MODE_PRIVATE);
+    preferences = reactApplicationContext.getApplicationContext().getSharedPreferences("location", Context.MODE_PRIVATE);
     System.out.println("SharedPreferencesModule HAS INITIALIZED");
-    mActivity = activity;
   }
 
   @Override
@@ -27,12 +26,12 @@ public class SharedPreferencesModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void getString(String key, Promise promise) {
+  public void getString(String key, Callback callback) {
     Object value = preferences.getAll().get(key);
     if (value != null) {
-      promise.resolve(value.toString());
+      callback.invoke(value.toString());
     } else {
-      promise.resolve("");
+      callback.invoke("");
     }
   }
 
