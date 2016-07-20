@@ -10,6 +10,11 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.bridge.WritableMap;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SharedPreferencesModule extends ReactContextBaseJavaModule {
   SharedPreferences preferences;
@@ -33,6 +38,31 @@ public class SharedPreferencesModule extends ReactContextBaseJavaModule {
     } else {
       callback.invoke("");
     }
+  }
+
+  @ReactMethod
+  public void getAll(Callback callback) {
+    List<String> params = new ArrayList<String>();
+    params.add("phoneNumber");
+    params.add("uuid");
+    params.add("code");
+    WritableMap res = new WritableNativeMap();
+    for (String param : params) {
+        if(preferences.getAll().get(param) != null)
+           if(param.equals("uuid"))
+                res.putString("userId",preferences.getAll().get(param).toString());
+           else
+                res.putString(param,preferences.getAll().get(param).toString());
+    }
+    callback.invoke(res);
+  }
+
+  @ReactMethod
+   public void deleteAll(String key, Callback callback) {
+    SharedPreferences.Editor editor = preferences.edit();
+    editor.clear();
+    boolean res = editor.commit();
+    callback.invoke(res);
   }
 
   @ReactMethod
