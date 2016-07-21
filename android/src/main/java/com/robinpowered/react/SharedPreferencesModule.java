@@ -49,21 +49,18 @@ public class SharedPreferencesModule extends ReactContextBaseJavaModule {
     WritableMap res = new WritableNativeMap();
     for (String param : params) {
         if(preferences.getAll().get(param) != null)
-           if(param.equals("uuid"))
-                res.putString("userId",preferences.getAll().get(param).toString());
-           else
-                res.putString(param,preferences.getAll().get(param).toString());
+            res.putString(param,preferences.getAll().get(param).toString());
     }
     callback.invoke(res);
   }
 
   @ReactMethod
-   public void deleteAll(String key, Callback callback) {
-    SharedPreferences.Editor editor = preferences.edit();
-    editor.clear();
-    boolean res = editor.commit();
-    callback.invoke(res);
-  }
+    public void deleteAll(Callback callback) {
+     SharedPreferences.Editor editor = preferences.edit();
+     editor.clear();
+     boolean res = editor.commit();
+     callback.invoke(res);
+   }
 
   @ReactMethod
   public void setString(String key, String value, Promise promise) {
